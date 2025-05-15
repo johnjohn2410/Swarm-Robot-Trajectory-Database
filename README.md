@@ -49,35 +49,39 @@ erDiagram
         real x_coord
         real y_coord
     }
-Relational Schema
-Robots
-robot_id INTEGER PRIMARY KEY
-Description: Unique identifier for each robot.
-name TEXT NOT NULL UNIQUE
-Description: Name of the robot.
-Trajectories
-trajectory_id INTEGER PRIMARY KEY AUTOINCREMENT
-Description: Unique identifier for each trajectory record.
-robot_id INTEGER NOT NULL
-Description: Foreign key referencing the robot_id in the Robots table.
-timestamp INTEGER NOT NULL
-Description: The time stamp (in seconds) for the sensor reading.
-x_coord REAL NOT NULL
-Description: The x-axis coordinate (in cm) of the robot at the given timestamp.
-y_coord REAL NOT NULL
-Description: The y-axis coordinate (in cm) of the robot at the given timestamp.
-FOREIGN KEY (robot_id) REFERENCES Robots(robot_id)
-UNIQUE (robot_id, timestamp)
-Constraint: Ensures a robot can only have one location per timestamp.
-TargetIntervals
-interval_id INTEGER PRIMARY KEY AUTOINCREMENT
-Description: Unique identifier for each target interval.
-start_time INTEGER NOT NULL
-Description: The start time (in seconds) of the interval.
-end_time INTEGER NOT NULL
-Description: The end time (in seconds) of the interval.
-event_type TEXT
-Description: The type of event associated with this interval.
+```
+### Relational Schema
+
+1.  **Robots**
+    *   `robot_id` INTEGER PRIMARY KEY
+        *   *Description: Unique identifier for each robot.*
+    *   `name` TEXT NOT NULL UNIQUE
+        *   *Description: Name of the robot.*
+
+2.  **Trajectories**
+    *   `trajectory_id` INTEGER PRIMARY KEY AUTOINCREMENT
+        *   *Description: Unique identifier for each trajectory record.*
+    *   `robot_id` INTEGER NOT NULL
+        *   *Description: Foreign key referencing the `robot_id` in the `Robots` table.*
+    *   `timestamp` INTEGER NOT NULL
+        *   *Description: The time stamp (in seconds) for the sensor reading.*
+    *   `x_coord` REAL NOT NULL
+        *   *Description: The x-axis coordinate (in cm) of the robot at the given timestamp.*
+    *   `y_coord` REAL NOT NULL
+        *   *Description: The y-axis coordinate (in cm) of the robot at the given timestamp.*
+    *   FOREIGN KEY (`robot_id`) REFERENCES `Robots`(`robot_id`)
+    *   UNIQUE (`robot_id`, `timestamp`)
+        *   *Constraint: Ensures a robot can only have one location per timestamp.*
+
+3.  **TargetIntervals**
+    *   `interval_id` INTEGER PRIMARY KEY AUTOINCREMENT
+        *   *Description: Unique identifier for each target interval.*
+    *   `start_time` INTEGER NOT NULL
+        *   *Description: The start time (in seconds) of the interval.*
+    *   `end_time` INTEGER NOT NULL
+        *   *Description: The end time (in seconds) of the interval.*
+    *   `event_type` TEXT
+        *   *Description: The type of event associated with this interval.*
 Design Rationale: The schema normalizes the data by creating separate tables for robots, their trajectories, and target intervals. This allows for efficient querying and data integrity. The Trajectories table includes foreign keys to link back to the Robots table and a unique constraint on (robot_id, timestamp).
 Task 2: Database Creation and Data Import
 An SQLite database named robot.db is created and populated using the setup_database.py Python script. This script:
