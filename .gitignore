@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# SQLite Database
+*.db
+*.db-journal
+
+# macOS
+.DS_Store
+
+# JetBrains IDE
+.idea/
+*.iml
