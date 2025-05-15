@@ -32,16 +32,13 @@ Swarm robots are small, autonomous robots crucial for tasks like resource foragi
 ```mermaid
 erDiagram
     Robot ||--o{ Trajectory : records
-    TargetInterval {
-        int interval_id PK
-        int start_time
-        int end_time
-        text event_type
-    }
+    TargetInterval ||--o{ Trajectory : overlaps
+
     Robot {
         int robot_id PK
         text name
     }
+
     Trajectory {
         int trajectory_id PK
         int robot_id FK
@@ -49,7 +46,15 @@ erDiagram
         real x_coord
         real y_coord
     }
+
+    TargetInterval {
+        int interval_id PK
+        int start_time
+        int end_time
+        text event_type
+    }
 ```
+*Note: The `Robot ||--o{ Trajectory` relationship is enforced by a foreign key. The `TargetInterval ||--o{ Trajectory : overlaps` relationship is conceptual; it indicates that trajectory records are analyzed based on whether their `timestamp` falls within a `TargetInterval`'s `start_time` and `end_time`. There is no direct foreign key in the `Trajectory` table referencing `TargetInterval`.*
 ### Relational Schema
 
 1.  **Robots**
