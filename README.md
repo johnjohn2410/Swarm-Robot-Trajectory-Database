@@ -82,6 +82,7 @@ erDiagram
         *   *Description: The end time (in seconds) of the interval.*
     *   `event_type` TEXT
         *   *Description: The type of event associated with this interval.*
+
 Design Rationale: The schema normalizes the data by creating separate tables for robots, their trajectories, and target intervals. This allows for efficient querying and data integrity. The Trajectories table includes foreign keys to link back to the Robots table and a unique constraint on (robot_id, timestamp).
 Task 2: Database Creation and Data Import
 An SQLite database named robot.db is created and populated using the setup_database.py Python script. This script:
