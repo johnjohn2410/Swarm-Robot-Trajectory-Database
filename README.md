@@ -274,18 +274,9 @@ python -m venv .venv
 Run the database setup script:
 This will create robot.db and populate it.
 python3 setup_database.py
+
 (Use python instead of python3 if that's how your system is configured, especially on Windows.)
 Run the query and analysis script:
 This will print the results of Tasks 3 & 4 to the console.
 python3 query_tasks.py
 
-
----
-
-This README now includes:
-*   The ERD and Schema for Task 1.
-*   A description of Task 2 and a sample of its console output for confirmation.
-*   The SQL queries and the exact console output you provided for Tasks 3 and 4 (including the bonus).
-*   Clear instructions on how to set up and run the project.
-
-This should be suitable for your submission.
