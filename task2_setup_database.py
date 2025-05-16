@@ -1,3 +1,4 @@
+# task2_setup_database.py
 import sqlite3
 import csv
 import os
@@ -8,6 +9,7 @@ DATA_PATH = '.'  # Assumes CSV files are in the same directory as the script
 
 def create_tables(conn):
     cursor = conn.cursor()
+    # Robots Table
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS Robots
                    (
@@ -22,6 +24,7 @@ def create_tables(conn):
                        UNIQUE
                    )
                    ''')
+    # Trajectories Table
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS Trajectories
                    (
@@ -61,6 +64,7 @@ def create_tables(conn):
                    )
                        )
                    ''')
+    # TargetIntervals Table
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS TargetIntervals
                    (
@@ -91,9 +95,8 @@ def import_robot_data(conn):
     try:
         with open(filepath, 'r', encoding='utf-8-sig') as f:  # utf-8-sig handles potential BOM
             reader = csv.reader(f)
-            # next(reader) # Skip header if exists, robot.csv doesn't seem to have one
             for row_num, row in enumerate(reader):
-                if not row:  # Skip empty rows
+                if not row:
                     print(f"Skipping empty row {row_num + 1} in {filepath}")
                     continue
                 if len(row) == 2:
@@ -104,7 +107,6 @@ def import_robot_data(conn):
                         print(f"Skipping row {row_num + 1} in {filepath} due to data conversion error: {row} - {ve}")
                     except sqlite3.IntegrityError as ie:
                         print(f"Skipping duplicate robot ID or name in {filepath}: {row} - {ie}")
-
         conn.commit()
         print(f"Robot data from {filepath} imported successfully.")
     except FileNotFoundError:
@@ -115,17 +117,17 @@ def import_robot_data(conn):
 
 def import_trajectory_data(conn):
     cursor = conn.cursor()
-    for i in range(1, 6):  # t1.csv to t5.csv
+    for i in range(1, 6):
         filename = f't{i}.csv'
         filepath = os.path.join(DATA_PATH, filename)
-        robot_id = i  # Robot ID corresponds to the file number t(i).csv
+        robot_id = i
         timestamp_counter = 0
         try:
             with open(filepath, 'r', encoding='utf-8-sig') as f:
                 reader = csv.reader(f)
                 for row_num, row in enumerate(reader):
-                    timestamp_counter = row_num + 1  # Timestamp starts from 1 for each file
-                    if not row:  # Skip empty rows
+                    timestamp_counter = row_num + 1
+                    if not row:
                         print(f"Skipping empty row {row_num + 1} in {filepath}")
                         continue
                     if len(row) == 2:
@@ -141,7 +143,6 @@ def import_trajectory_data(conn):
                         except sqlite3.IntegrityError as ie:
                             print(
                                 f"Skipping duplicate trajectory entry in {filepath} for robot {robot_id} at timestamp {timestamp_counter}: {row} - {ie}")
-
             print(f"Trajectory data from {filepath} imported successfully.")
         except FileNotFoundError:
             print(f"Error: {filepath} not found.")
@@ -153,13 +154,13 @@ def import_trajectory_data(conn):
 
 def import_target_interval_data(conn):
     cursor = conn.cursor()
-    filepath = os.path.join(DATA_PATH, 'target_interval.csv')  # Corrected filename
+    filepath = os.path.join(DATA_PATH, 'target_interval.csv')
     try:
         with open(filepath, 'r', encoding='utf-8-sig') as f:
             reader = csv.reader(f)
-            header = next(reader)  # Skip header: start_time,end_time,event_type
+            header = next(reader)
             for row_num, row in enumerate(reader):
-                if not row:  # Skip empty rows
+                if not row:
                     print(f"Skipping empty row {row_num + 1} in {filepath}")
                     continue
                 if len(row) == 3:
@@ -171,7 +172,6 @@ def import_target_interval_data(conn):
                                        ''', (start_time, end_time, event_type))
                     except ValueError as ve:
                         print(f"Skipping row {row_num + 1} in {filepath} due to data conversion error: {row} - {ve}")
-
         conn.commit()
         print(f"Target interval data from {filepath} imported successfully.")
     except FileNotFoundError:
@@ -181,19 +181,21 @@ def import_target_interval_data(conn):
 
 
 def main():
+    # Remove existing database file if it exists, to ensure a fresh import for Task 2 execution
     if os.path.exists(DB_NAME):
         os.remove(DB_NAME)
-        print(f"Removed existing database {DB_NAME}.")
+        print(f"Removed existing database '{DB_NAME}' for a fresh setup.")
 
     conn = sqlite3.connect(DB_NAME)
 
+    print("\n" + "=" * 10 + " EXECUTING TASK 2: DATABASE CREATION & IMPORT " + "=" * 10)
     create_tables(conn)
     import_robot_data(conn)
     import_trajectory_data(conn)
-    import_target_interval_data(conn)  # Use the corrected filename
+    import_target_interval_data(conn)
 
     conn.close()
-    print(f"Database {DB_NAME} created and populated successfully.")
+    print(f"\nDatabase '{DB_NAME}' created and populated successfully. Task 2 complete.")
 
 
 if __name__ == '__main__':
