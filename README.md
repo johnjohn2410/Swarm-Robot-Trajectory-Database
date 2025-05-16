@@ -27,66 +27,7 @@ Swarm robots are small, autonomous robots crucial for tasks like resource foragi
 
 ## Task 1: ER Diagram and Relational Schema
 
-### ER Diagram
-
-```mermaid
-erDiagram
-    Robot ||--o{ Trajectory : records
-    TargetInterval ||--o{ Trajectory : overlaps
-
-    Robot {
-        int robot_id PK
-        text name
-    }
-
-    Trajectory {
-        int trajectory_id PK
-        int robot_id FK
-        int timestamp
-        real x_coord
-        real y_coord
-    }
-
-    TargetInterval {
-        int interval_id PK
-        int start_time
-        int end_time
-        text event_type
-    }
-```
-*Note: The `Robot ||--o{ Trajectory` relationship is enforced by a foreign key. The `TargetInterval ||--o{ Trajectory : overlaps` relationship is conceptual; it indicates that trajectory records are analyzed based on whether their `timestamp` falls within a `TargetInterval`'s `start_time` and `end_time`. There is no direct foreign key in the `Trajectory` table referencing `TargetInterval`.*
-### Relational Schema
-
-1.  **Robots**
-    *   `robot_id` INTEGER PRIMARY KEY
-        *   *Description: Unique identifier for each robot.*
-    *   `name` TEXT NOT NULL UNIQUE
-        *   *Description: Name of the robot.*
-
-2.  **Trajectories**
-    *   `trajectory_id` INTEGER PRIMARY KEY AUTOINCREMENT
-        *   *Description: Unique identifier for each trajectory record.*
-    *   `robot_id` INTEGER NOT NULL
-        *   *Description: Foreign key referencing the `robot_id` in the `Robots` table.*
-    *   `timestamp` INTEGER NOT NULL
-        *   *Description: The time stamp (in seconds) for the sensor reading.*
-    *   `x_coord` REAL NOT NULL
-        *   *Description: The x-axis coordinate (in cm) of the robot at the given timestamp.*
-    *   `y_coord` REAL NOT NULL
-        *   *Description: The y-axis coordinate (in cm) of the robot at the given timestamp.*
-    *   FOREIGN KEY (`robot_id`) REFERENCES `Robots`(`robot_id`)
-    *   UNIQUE (`robot_id`, `timestamp`)
-        *   *Constraint: Ensures a robot can only have one location per timestamp.*
-
-3.  **TargetIntervals**
-    *   `interval_id` INTEGER PRIMARY KEY AUTOINCREMENT
-        *   *Description: Unique identifier for each target interval.*
-    *   `start_time` INTEGER NOT NULL
-        *   *Description: The start time (in seconds) of the interval.*
-    *   `end_time` INTEGER NOT NULL
-        *   *Description: The end time (in seconds) of the interval.*
-    *   `event_type` TEXT
-        *   *Description: The type of event associated with this interval.*
+UPLOADED TO BLACKBOARD
 
 Design Rationale: The schema normalizes the data by creating separate tables for robots, their trajectories, and target intervals. This allows for efficient querying and data integrity. The Trajectories table includes foreign keys to link back to the Robots table and a unique constraint on (robot_id, timestamp).
 Task 2: Database Creation and Data Import
